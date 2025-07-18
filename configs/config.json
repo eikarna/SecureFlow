@@ -1,4 +1,11 @@
 {
-  "server_address": "127.0.0.1:5000",
-  "auth_key": "your-super-secret-key-here"
+  "listen_address": "0.0.0.0",
+  "handshake_port": 5000,
+  "client_target_address": "127.0.0.1",
+  "auth_key": "your-super-secret-key-here",
+  "port_hopping": {
+    "enabled": true,
+    "start": 5001,
+    "end": 5999
+  }
 }

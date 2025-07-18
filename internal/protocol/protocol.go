@@ -3,33 +3,43 @@ package protocol
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"io"
-
-	"github.com/eikarna/SecureFlow/internal/crypto"
 )
 
 const (
-	ProtocolVersion    = 1
-	HandshakeMsgType   = 0x01
-	DataMsgType        = 0x02
-	HandshakePublicKeySize = crypto.KeySize
+	ProtocolVersion  = 1
+	HandshakeMsgType = 0x01
+	DataMsgType      = 0x02
+	HashSize         = 32 // BLAKE3-256
 )
 
-// PacketHeader adalah header untuk setiap paket SecureFlow.
+// PacketHeader adalah header tingkat rendah untuk setiap paket UDP.
 type PacketHeader struct {
 	Version   uint8
 	Type      uint8
 	NonceSize uint16
 	Length    uint16 // Panjang dari sisa paket (Nonce + Payload)
+	PrevHash  [HashSize]byte
 }
 
-// SecurePacket merepresentasikan satu unit data yang dikirim.
+// SecurePacket merepresentasikan satu unit data yang dikirim melalui UDP.
 type SecurePacket struct {
-	Header    PacketHeader
-	Nonce     []byte
-	Payload   []byte // Bisa berupa public key (handshake) atau data terenkripsi
-	// TODO: Tambahkan Prev_Hash (32B) untuk chaining
+	Header  PacketHeader
+	Nonce   []byte
+	Payload []byte // Payload yang sudah dienkripsi
+}
+
+// DataMessage adalah struktur data aplikasi yang sebenarnya.
+// Struktur ini akan diserialisasi (misalnya ke JSON) dan kemudian dienkripsi.
+type DataMessage struct {
+	SessionID  string `json:"session_id"`
+	Message    []byte `json:"message"`
+	NextPort   uint16 `json:"next_port"`
+	Seq        uint64 `json:"seq"`        // Nomor urut paket ini
+	AckSeq     uint64 `json:"ack_seq"`    // ACK untuk nomor urut paket yang diterima
+	ReturnAddr string `json:"return_addr"` // Alamat untuk mengirim balasan/ACK
 }
 
 // Serialize mengubah SecurePacket menjadi byte slice untuk dikirim.
@@ -53,7 +63,8 @@ func (p *SecurePacket) Serialize() ([]byte, error) {
 
 // Deserialize mengubah byte slice menjadi SecurePacket.
 func Deserialize(data []byte) (*SecurePacket, error) {
-	if len(data) < binary.Size(PacketHeader{}) {
+	headerSize := binary.Size(PacketHeader{})
+	if len(data) < headerSize {
 		return nil, fmt.Errorf("data terlalu pendek untuk header: %d", len(data))
 	}
 
@@ -88,4 +99,16 @@ func Deserialize(data []byte) (*SecurePacket, error) {
 		Nonce:   nonce,
 		Payload: payload,
 	}, nil
+}
+
+// EncodeDataMessage mengubah struct DataMessage menjadi JSON.
+func EncodeDataMessage(msg *DataMessage) ([]byte, error) {
+	return json.Marshal(msg)
+}
+
+// DecodeDataMessage mengubah JSON menjadi struct DataMessage.
+func DecodeDataMessage(data []byte) (*DataMessage, error) {
+	var msg DataMessage
+	err := json.Unmarshal(data, &msg)
+	return &msg, err
 }

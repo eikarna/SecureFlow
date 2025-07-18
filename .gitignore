@@ -19,6 +19,5 @@ go.work
 go.work.sum
 
 # Build binary
-SecureFlow
-secureflow-server
-secureflow-client
+# secureflow-server
+# secureflow-client

@@ -15,11 +15,11 @@ Proyek ini bertujuan untuk menyediakan fondasi fungsional yang mengimplementasik
 
 - [ ] **Integrasi Post-Quantum Cryptography (PQC)**: Menambahkan **Kyber (ML-KEM)** untuk pertukaran kunci hibrida.
 - [ ] **Obfuskasi Tingkat Lanjut**: Implementasi *packet padding*, *dummy packets*, dan *timing obfuscation*.
-- [ ] **Port Hopping Dinamis**: Menggunakan port yang berbeda untuk setiap koneksi.
+- [x] **Port Hopping Dinamis**: Menggunakan port yang berbeda untuk setiap koneksi.
 - [ ] **Desentralisasi Opsional**: Membangun routing terdesentralisasi yang terinspirasi dari Tor.
-- [ ] **Mekanisme Hashing**: Menggunakan **BLAKE3** untuk membuat rantai hash antar paket.
+- [x] **Mekanisme Hashing**: Menggunakan **BLAKE3** untuk membuat rantai hash antar paket.
 - [ ] **Congestion Control**: Implementasi algoritma seperti BBR.
-- [ ] **Konfigurasi Lanjutan**: Memperluas file konfigurasi.
+- [x] **Konfigurasi Lanjutan**: Memperluas file konfigurasi.
 
 ## Cara Menjalankan
 
@@ -52,7 +52,7 @@ go build -o secureflow-client ./cmd/secureflow-client
     ```bash
     ./secureflow-server
     ```
-    Server akan berjalan dan mendengarkan di `127.0.0.1:8080` sesuai konfigurasi.
+    Server akan berjalan dan mendengarkan di `127.0.0.1:5001-5999` sesuai konfigurasi.
 
 2.  **Jalankan Klien**
     Buka terminal kedua dan jalankan klien:
@@ -63,4 +63,4 @@ go build -o secureflow-client ./cmd/secureflow-client
 
 ---
 *Proyek ini dibuat berdasarkan dokumen teknis oleh Adnan Syamsafa.*
-*Diimplementasikan oleh Gemini.*
+*Diimplementasikan oleh Gemini 2.5 Pro.*
