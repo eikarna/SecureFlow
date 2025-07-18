@@ -1,6 +1,6 @@
 # SecureFlow Protocol
 
-**SecureFlow** adalah implementasi proof-of-concept dari protokol komunikasi yang aman, privat, dan tahan-kuantum berdasarkan [SecureFlow Whitepaper](https://github.com/eikarna/SecureFlow) dan [Panduan Teknis](https://github.com/eikarna/SecureFlow).
+**SecureFlow** adalah implementasi proof-of-concept dari protokol komunikasi yang aman, privat, dan tahan-kuantum berdasarkan [SecureFlow Whitepaper](docs/SecureFlow-Whitepaper.md) dan [Panduan Teknis](docs/SecureFlow%20Technical%20Guide.md).
 
 Proyek ini bertujuan untuk menyediakan fondasi fungsional yang mengimplementasikan fitur-fitur inti dari SecureFlow, ditulis dalam **Go**.
 
